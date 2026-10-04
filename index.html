@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Software Development Life Cycle (SDLC) learning platform. Drag and arrange SDLC stages, explore development models, and test your knowledge.">
+    <title>SDLC Interactive Learning Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="12" stroke="url(#logoGrad)" stroke-width="2.5" fill="none"/>
+                    <path d="M9 14 L13 18 L19 10" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+                            <stop offset="0%" stop-color="#818cf8"/>
+                            <stop offset="100%" stop-color="#c084fc"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="nav-title">SDLC Explorer</span>
+        </div>
+        <div class="nav-links">
+            <a href="#hero" class="nav-link active" data-section="hero">Home</a>
+            <a href="#stages" class="nav-link" data-section="stages">Stages</a>
+            <a href="#arrange" class="nav-link" data-section="arrange">Challenge</a>
+            <a href="#models" class="nav-link" data-section="models">Models</a>
+            <a href="#quiz" class="nav-link" data-section="quiz">Quiz</a>
+        </div>
+        <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#hero" class="mobile-link" data-section="hero">Home</a>
+        <a href="#stages" class="mobile-link" data-section="stages">Stages</a>
+        <a href="#arrange" class="mobile-link" data-section="arrange">Challenge</a>
+        <a href="#models" class="mobile-link" data-section="models">Models</a>
+        <a href="#quiz" class="mobile-link" data-section="quiz">Quiz</a>
+    </div>
+
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">📚 Interactive Learning</div>
+            <h1 class="hero-title">
+                Software Development<br>
+                <span class="gradient-text">Life Cycle</span>
+            </h1>
+            <p class="hero-subtitle">
+                Master SDLC through interactive drag-and-drop challenges. 
+                Arrange stages, explore models, and test your knowledge — all in one place.
+            </p>
+            <div class="hero-actions">
+                <a href="#arrange" class="btn btn-primary">
+                    <span>Start Challenge</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+                <a href="#stages" class="btn btn-secondary">
+                    <span>Learn Stages</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">SDLC Stages</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Dev Models</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Practice</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="orbit-container">
+                <div class="orbit-ring ring-1"></div>
+                <div class="orbit-ring ring-2"></div>
+                <div class="orbit-ring ring-3"></div>
+                <div class="orbit-center">
+                    <span>SDLC</span>
+                </div>
+                <div class="orbit-item orbit-1" data-tooltip="Initiation">🚀</div>
+                <div class="orbit-item orbit-2" data-tooltip="Planning">📋</div>
+                <div class="orbit-item orbit-3" data-tooltip="Design">🎨</div>
+                <div class="orbit-item orbit-4" data-tooltip="Development">💻</div>
+                <div class="orbit-item orbit-5" data-tooltip="Testing">🧪</div>
+                <div class="orbit-item orbit-6" data-tooltip="Deployment">🚢</div>
+                <div class="orbit-item orbit-7" data-tooltip="Maintenance">🔧</div>
+                <div class="orbit-item orbit-8" data-tooltip="Analysis">📊</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="stages">
+        <div class="section-header">
+            <span class="section-badge">📖 Learn</span>
+            <h2 class="section-title">SDLC <span class="gradient-text">Stages</span></h2>
+            <p class="section-subtitle">Click on any stage to explore it in detail</p>
+        </div>
+        <div class="stages-timeline" id="stagesTimeline"></div>
+
+        <div class="stage-modal" id="stageModal">
+            <div class="stage-modal-overlay" id="stageModalOverlay"></div>
+            <div class="stage-modal-content" id="stageModalContent">
+                <button class="modal-close" id="modalClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+                <div class="modal-icon" id="modalIcon"></div>
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-details" id="modalDetails"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-dark" id="arrange">
+        <div class="section-header">
+            <span class="section-badge">🎯 Challenge</span>
+            <h2 class="section-title">Arrange the <span class="gradient-text">Stages</span></h2>
+            <p class="section-subtitle">Drag and drop the blocks to arrange SDLC stages in the correct order</p>
+        </div>
+
+        <div class="challenge-container">
+            <div class="challenge-info">
+                <div class="challenge-score" id="challengeScore">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#scoreGrad)" stroke-width="6" stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" id="scoreCircle"/>
+                            <defs>
+                                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#34d399"/>
+                                    <stop offset="100%" stop-color="#818cf8"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="score-text" id="scoreText">0/8</span>
+                    </div>
+                    <span class="score-label">Correct Position</span>
+                </div>
+                <div class="challenge-actions">
+                    <button class="btn btn-primary" id="checkOrderBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span>Check Order</span>
+                    </button>
+                    <button class="btn btn-ghost" id="shuffleBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                        <span>Shuffle</span>
+                    </button>
+                    <button class="btn btn-ghost" id="resetBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="drop-zone" id="dropZone"></div>
+
+            <div class="challenge-feedback" id="challengeFeedback"></div>
+        </div>
+    </section>
+
+    <section class="section" id="models">
+        <div class="section-header">
+            <span class="section-badge">🏗️ Explore</span>
+            <h2 class="section-title">Development <span class="gradient-text">Models</span></h2>
+            <p class="section-subtitle">Explore different software development methodologies</p>
+        </div>
+
+        <div class="models-tabs" id="modelsTabs">
+            <button class="model-tab active" data-model="waterfall">
+                <span class="tab-icon">🌊</span>
+                <span>Waterfall</span>
+            </button>
+            <button class="model-tab" data-model="prototype">
+                <span class="tab-icon">🔬</span>
+                <span>Prototype</span>
+            </button>
+            <button class="model-tab" data-model="spiral">
+                <span class="tab-icon">🌀</span>
+                <span>Spiral</span>
+            </button>
+            <button class="model-tab" data-model="iterative">
+                <span class="tab-icon">🔄</span>
+                <span>Iterative</span>
+            </button>
+        </div>
+
+        <div class="model-content" id="modelContent"></div>
+    </section>
+
+    <section class="section section-dark" id="quiz">
+        <div class="section-header">
+            <span class="section-badge">🧠 Test</span>
+            <h2 class="section-title">Knowledge <span class="gradient-text">Quiz</span></h2>
+            <p class="section-subtitle">Test your understanding of SDLC concepts</p>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+            </div>
+            <div class="quiz-counter">
+                <span id="quizCurrent">1</span> / <span id="quizTotal">10</span>
+            </div>
+            <div class="quiz-question" id="quizQuestion"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-nav">
+                <button class="btn btn-ghost" id="quizPrev" disabled>Previous</button>
+                <button class="btn btn-primary" id="quizNext">Next</button>
+            </div>
+        </div>
+
+        <div class="quiz-results" id="quizResults" style="display:none;">
+            <div class="results-card">
+                <div class="results-emoji" id="resultsEmoji">🎉</div>
+                <h3 class="results-title" id="resultsTitle">Great Job!</h3>
+                <div class="results-score" id="resultsScore">0/10</div>
+                <p class="results-text" id="resultsText"></p>
+                <button class="btn btn-primary" id="retakeQuiz">Retake Quiz</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>SDLC Interactive Learning Platform — Built for Students</p>
+            <p class="footer-sub">Software Development Life Cycle © 2026</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
