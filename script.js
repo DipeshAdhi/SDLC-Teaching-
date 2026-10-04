@@ -417,14 +417,20 @@ function initNavbar() {
     });
 
     mobileToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('open');
+        const isOpen = mobileMenu.classList.toggle('open');
+        mobileToggle.classList.toggle('open', isOpen);
+        mobileToggle.setAttribute('aria-expanded', String(isOpen));
     });
 
     document.querySelectorAll('.mobile-link').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.remove('open');
+            mobileToggle.classList.remove('open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
         });
     });
+
+    updateActiveNavLink();
 }
 
 function updateActiveNavLink() {
@@ -915,8 +921,37 @@ function renderIncrementalVsIterativeComparison() {
 // ─── Workflow Builder (Interactive Board) ───────────────────────────
 let boardBlocks = [];
 
+const METHODOLOGY_GUIDES = {
+    waterfall: {
+        title: 'Waterfall Model',
+        tip: '<strong>Good fit:</strong> clear requirements and a step-by-step delivery process. Use core SDLC blocks in a linear sequence.',
+        recommended: ['req', 'arch', 'dev', 'test', 'deploy']
+    },
+    prototype: {
+        title: 'Prototype Model',
+        tip: '<strong>Good fit:</strong> unclear or changing requirements. Build quick mockups and loop back with user feedback.',
+        recommended: ['req', 'proto', 'user_fb', 'arch', 'dev']
+    },
+    incremental: {
+        title: 'Incremental Model',
+        tip: '<strong>Good fit:</strong> deliver features in manageable modules. Focus on building software piece-by-piece.',
+        recommended: ['req', 'arch', 'inc_build', 'test', 'deploy']
+    },
+    iterative: {
+        title: 'Iterative Model',
+        tip: '<strong>Good fit:</strong> refine the full system through repeated releases and improvement cycles.',
+        recommended: ['req', 'arch', 'dev', 'iter_refine', 'test', 'deploy']
+    },
+    spiral: {
+        title: 'Spiral Model',
+        tip: '<strong>Good fit:</strong> high-risk, mission-critical systems. Review risk before each engineering cycle.',
+        recommended: ['req', 'risk', 'proto', 'arch', 'dev', 'test', 'deploy']
+    }
+};
+
 function initWorkflowBuilder() {
     renderBlockPalette();
+    updateMethodologyHint();
 
     const clearBtn = document.getElementById('clearWorkflowBtn');
     const evalBtn = document.getElementById('evalWorkflowBtn');
@@ -925,6 +960,8 @@ function initWorkflowBuilder() {
     if (clearBtn) clearBtn.addEventListener('click', clearBoard);
     if (evalBtn) evalBtn.addEventListener('click', evaluateWorkflow);
     if (targetSelect) targetSelect.addEventListener('change', () => {
+        updateMethodologyHint();
+        renderBlockPalette();
         document.getElementById('builderFeedbackCard').style.display = 'none';
     });
 
@@ -935,19 +972,39 @@ function initWorkflowBuilder() {
     }
 }
 
+function updateMethodologyHint() {
+    const select = document.getElementById('targetMethodologySelect');
+    const hint = document.getElementById('methodologyHint');
+    if (!select || !hint) return;
+
+    const current = METHODOLOGY_GUIDES[select.value];
+    hint.innerHTML = `${current.tip}`;
+}
+
 function renderBlockPalette() {
     const palette = document.getElementById('blockPalette');
-    if (!palette) return;
+    const select = document.getElementById('targetMethodologySelect');
+    if (!palette || !select) return;
 
-    palette.innerHTML = PROCESS_BLOCKS.map(b => `
-        <div class="block-item" draggable="true" data-id="${b.id}">
-            <span class="block-icon">${b.icon}</span>
-            <div class="block-text">
-                <span class="block-name">${b.name}</span>
-                <span class="block-desc">${b.desc}</span>
+    const activeMethod = METHODOLOGY_GUIDES[select.value];
+    const recommended = new Set(activeMethod.recommended);
+
+    palette.innerHTML = PROCESS_BLOCKS.map(b => {
+        const isRecommended = recommended.has(b.id);
+        const classes = ['block-item'];
+        if (isRecommended) classes.push('recommended');
+        else classes.push('dimmed');
+
+        return `
+            <div class="${classes.join(' ')}" draggable="true" data-id="${b.id}">
+                <span class="block-icon">${b.icon}</span>
+                <div class="block-text">
+                    <span class="block-name">${b.name}</span>
+                    <span class="block-desc">${b.desc}</span>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     palette.querySelectorAll('.block-item').forEach(el => {
         el.addEventListener('dragstart', (e) => {
