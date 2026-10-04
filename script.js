@@ -925,27 +925,37 @@ const METHODOLOGY_GUIDES = {
     waterfall: {
         title: 'Waterfall Model',
         tip: '<strong>Good fit:</strong> clear requirements and a step-by-step delivery process. Use core SDLC blocks in a linear sequence.',
-        recommended: ['req', 'arch', 'dev', 'test', 'deploy']
+        recommended: ['req', 'arch', 'dev', 'test', 'deploy'],
+        sequence: ['req', 'arch', 'dev', 'test', 'deploy'],
+        successText: 'Excellent! This is a proper Waterfall flow: requirements, design, development, testing, and deployment.'
     },
     prototype: {
         title: 'Prototype Model',
         tip: '<strong>Good fit:</strong> unclear or changing requirements. Build quick mockups and loop back with user feedback.',
-        recommended: ['req', 'proto', 'user_fb', 'arch', 'dev']
+        recommended: ['req', 'proto', 'user_fb', 'arch', 'dev'],
+        sequence: ['req', 'proto', 'user_fb', 'arch', 'dev', 'test', 'deploy'],
+        successText: 'Great job! Your prototype workflow includes rapid mock-up creation and user feedback before final development.'
     },
     incremental: {
         title: 'Incremental Model',
         tip: '<strong>Good fit:</strong> deliver features in manageable modules. Focus on building software piece-by-piece.',
-        recommended: ['req', 'arch', 'inc_build', 'test', 'deploy']
+        recommended: ['req', 'arch', 'inc_build', 'test', 'deploy'],
+        sequence: ['req', 'arch', 'inc_build', 'test', 'deploy'],
+        successText: 'Nice work! This incremental layout delivers functionality in modules and keeps the system growing step by step.'
     },
     iterative: {
         title: 'Iterative Model',
         tip: '<strong>Good fit:</strong> refine the full system through repeated releases and improvement cycles.',
-        recommended: ['req', 'arch', 'dev', 'iter_refine', 'test', 'deploy']
+        recommended: ['req', 'arch', 'dev', 'iter_refine', 'test', 'deploy'],
+        sequence: ['req', 'arch', 'dev', 'iter_refine', 'test', 'deploy'],
+        successText: 'Perfect! This iterative workflow keeps refining the whole system through repeated cycles.'
     },
     spiral: {
         title: 'Spiral Model',
         tip: '<strong>Good fit:</strong> high-risk, mission-critical systems. Review risk before each engineering cycle.',
-        recommended: ['req', 'risk', 'proto', 'arch', 'dev', 'test', 'deploy']
+        recommended: ['req', 'risk', 'proto', 'arch', 'dev', 'test', 'deploy'],
+        sequence: ['req', 'risk', 'proto', 'arch', 'dev', 'test', 'deploy'],
+        successText: 'Excellent! This spiral design correctly emphasizes risk analysis and repeated learning before implementation.'
     }
 };
 
@@ -1081,81 +1091,64 @@ function evaluateWorkflow() {
         return;
     }
 
-    const blockIds = boardBlocks.map(b => b.id);
-    let matchScore = 0;
-    let feedbackMsgs = [];
-    let isSuccess = false;
+    const rule = METHODOLOGY_GUIDES[target];
+    const currentIds = boardBlocks.map(block => block.id);
+    const required = rule.sequence;
+    const presentSet = new Set(currentIds);
+    const missing = required.filter(id => !presentSet.has(id));
+    const orderedSubset = currentIds.filter(id => required.includes(id));
+    const sequenceCorrect = orderedSubset.length === required.length && orderedSubset.every((id, idx) => id === required[idx]);
+    const hasExpectedCore = required.every(id => presentSet.has(id));
+    const isSuccess = hasExpectedCore && sequenceCorrect;
 
-    if (target === 'waterfall') {
-        const hasLinear = blockIds.includes('req') && blockIds.includes('arch') && blockIds.includes('dev') && blockIds.includes('test') && blockIds.includes('deploy');
-        const hasLoops = blockIds.includes('proto') || blockIds.includes('user_fb') || blockIds.includes('iter_refine');
+    let matchScore = isSuccess ? 100 : Math.max(30, Math.round((currentIds.filter(id => required.includes(id)).length / required.length) * 100) - (missing.length * 15));
+    const feedbackMsgs = [];
 
-        if (hasLinear && !hasLoops) {
-            matchScore = 100; isSuccess = true;
-            feedbackMsgs.push("✅ Perfect Linear Sequential Flow: Requirements → Design → Development → Testing → Deployment.");
-            feedbackMsgs.push("✅ Correctly omitted iteration & prototype loops, maintaining Waterfall rigidity.");
-        } else {
-            matchScore = Math.max(30, 100 - (hasLoops ? 40 : 0) - (!hasLinear ? 30 : 0));
-            if (hasLoops) feedbackMsgs.push("⚠️ Waterfall Model does NOT contain prototype or user feedback loops during coding!");
-            if (!hasLinear) feedbackMsgs.push("💡 Missing key Waterfall phases: Ensure Requirements Analysis, Design, Coding, Testing, and Deployment are present in linear order.");
-        }
-    } else if (target === 'prototype') {
-        const hasProto = blockIds.includes('proto');
-        const hasFeedbackLoop = blockIds.includes('user_fb');
+    if (isSuccess) {
+        badge.textContent = 'Good Job!';
+        badge.className = 'feedback-badge success';
+        title.textContent = '🎉 Correct Methodology Workflow!';
+        desc.textContent = rule.successText;
+        feedbackMsgs.push('✅ All required steps for this methodology are present.');
+        feedbackMsgs.push('✅ The order matches the intended SDLC flow.');
+        feedbackMsgs.push('✅ This is a strong and realistic workflow for ' + rule.title + '.');
+    } else {
+        badge.textContent = `${matchScore}% Match`;
+        badge.className = 'feedback-badge warning';
+        title.textContent = '⚡ Almost there — try a better flow';
+        desc.textContent = 'Your workflow is close, but it needs a few adjustments for ' + rule.title + '.';
 
-        if (hasProto && hasFeedbackLoop) {
-            matchScore = 100; isSuccess = true;
-            feedbackMsgs.push("✅ Excellent! Includes Build Prototype & User Feedback Loop before full development.");
-            feedbackMsgs.push("✅ Successfully models the Prototype loop where user evaluation refines requirements!");
-        } else {
-            matchScore = 40;
-            if (!hasProto) feedbackMsgs.push("⚠️ Missing 'Build Prototype' block from the palette!");
-            if (!hasFeedbackLoop) feedbackMsgs.push("⚠️ Missing 'User Feedback Loop' block! Prototyping relies on active user feedback.");
+        if (missing.length) {
+            const missingLabels = missing.map(id => {
+                const block = PROCESS_BLOCKS.find(item => item.id === id);
+                return block ? block.name : id;
+            }).join(', ');
+            feedbackMsgs.push(`Add these missing steps: ${missingLabels}.`);
         }
-    } else if (target === 'incremental') {
-        const hasInc = blockIds.includes('inc_build');
-        if (hasInc) {
-            matchScore = 100; isSuccess = true;
-            feedbackMsgs.push("✅ Correct Incremental setup! Module increments build software piece-by-piece.");
-        } else {
-            matchScore = 50;
-            feedbackMsgs.push("💡 Add the 'Build Module Increment' block to showcase feature-by-feature delivery.");
-        }
-    } else if (target === 'iterative') {
-        const hasIter = blockIds.includes('iter_refine');
-        if (hasIter) {
-            matchScore = 100; isSuccess = true;
-            feedbackMsgs.push("✅ Correct Iterative setup! Full software undergoes successive refinement cycles.");
-        } else {
-            matchScore = 50;
-            feedbackMsgs.push("💡 Add the 'Iterative Refinement Cycle' block to showcase full system release iterations.");
-        }
-    } else if (target === 'spiral') {
-        const hasRisk = blockIds.includes('risk');
-        const hasProto = blockIds.includes('proto');
 
-        if (hasRisk && hasProto) {
-            matchScore = 100; isSuccess = true;
-            feedbackMsgs.push("✅ Outstanding Spiral Model setup! Combines Risk Analysis & Safety Audit with Prototyping.");
-            feedbackMsgs.push("✅ Risk management is prioritized before engineering execution.");
-        } else {
-            matchScore = 40;
-            if (!hasRisk) feedbackMsgs.push("⚠️ Missing 'Risk Analysis & Safety Audit' block! Spiral is risk-driven.");
-            if (!hasProto) feedbackMsgs.push("⚠️ Include 'Build Prototype' to test technical risks in early spirals.");
+        if (!sequenceCorrect) {
+            feedbackMsgs.push(`Try this flow: ${required.map(id => {
+                const block = PROCESS_BLOCKS.find(item => item.id === id);
+                return block ? block.name : id;
+            }).join(' → ')}`);
+        }
+
+        if (!hasExpectedCore) {
+            feedbackMsgs.push('Keep the core structure of the methodology and avoid switching to unrelated steps.');
+        }
+
+        if (feedbackMsgs.length === 0) {
+            feedbackMsgs.push('Reorder your blocks to better match the selected methodology.');
         }
     }
 
-    card.style.display = 'block';
-    badge.textContent = `${matchScore}% Match`;
-    badge.className = `feedback-badge ${isSuccess ? 'success' : 'warning'}`;
-    title.textContent = isSuccess ? '🎉 Valid Methodology Workflow Created!' : '⚡ Workflow Review & Suggestions';
-    desc.textContent = `Evaluation results for target: ${target.toUpperCase()} MODEL`;
-
     details.innerHTML = `
         <ul class="feedback-list">
-            ${feedbackMsgs.map(m => `<li>${m}</li>`).join('')}
+            ${feedbackMsgs.map(msg => `<li>${msg}</li>`).join('')}
         </ul>
     `;
+
+    card.style.display = 'block';
 }
 
 // ─── Case Studies Evaluator (Question 3) ────────────────────────────
