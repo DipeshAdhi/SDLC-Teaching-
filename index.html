@@ -34,6 +34,8 @@
             <a href="#stages" class="nav-link" data-section="stages">Stages</a>
             <a href="#arrange" class="nav-link" data-section="arrange">Challenge</a>
             <a href="#models" class="nav-link" data-section="models">Models</a>
+            <a href="#builder" class="nav-link" data-section="builder">Workflow Builder</a>
+            <a href="#casestudies" class="nav-link" data-section="casestudies">Case Studies</a>
             <a href="#quiz" class="nav-link" data-section="quiz">Quiz</a>
         </div>
         <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
@@ -46,6 +48,8 @@
         <a href="#stages" class="mobile-link" data-section="stages">Stages</a>
         <a href="#arrange" class="mobile-link" data-section="arrange">Challenge</a>
         <a href="#models" class="mobile-link" data-section="models">Models</a>
+        <a href="#builder" class="mobile-link" data-section="builder">Workflow Builder</a>
+        <a href="#casestudies" class="mobile-link" data-section="casestudies">Case Studies</a>
         <a href="#quiz" class="mobile-link" data-section="quiz">Quiz</a>
     </div>
 
@@ -191,17 +195,129 @@
                 <span class="tab-icon">🔬</span>
                 <span>Prototype</span>
             </button>
-            <button class="model-tab" data-model="spiral">
-                <span class="tab-icon">🌀</span>
-                <span>Spiral</span>
+            <button class="model-tab" data-model="incremental">
+                <span class="tab-icon">🧩</span>
+                <span>Incremental</span>
             </button>
             <button class="model-tab" data-model="iterative">
                 <span class="tab-icon">🔄</span>
                 <span>Iterative</span>
             </button>
+            <button class="model-tab" data-model="spiral">
+                <span class="tab-icon">🌀</span>
+                <span>Spiral</span>
+            </button>
+            <button class="model-tab" data-model="comparison">
+                <span class="tab-icon">⚖️</span>
+                <span>Waterfall vs Prototype</span>
+            </button>
+            <button class="model-tab" data-model="inc_vs_iter">
+                <span class="tab-icon">🆚</span>
+                <span>Incremental vs Iterative</span>
+            </button>
         </div>
 
         <div class="model-content" id="modelContent"></div>
+    </section>
+
+    <!-- NEW SECTION: Interactive Methodology Builder (Interactive Board) -->
+    <section class="section section-dark" id="builder">
+        <div class="section-header">
+            <span class="section-badge">🛠️ Interactive Board</span>
+            <h2 class="section-title">Methodology <span class="gradient-text">Workflow Builder</span></h2>
+            <p class="section-subtitle">Drag process blocks & feedback loops onto the canvas to construct methodology workflows (Waterfall, Prototype, Incremental, Iterative, Spiral)</p>
+        </div>
+
+        <div class="builder-container">
+            <div class="builder-controls">
+                <div class="builder-target-selector">
+                    <label for="targetMethodologySelect">Target Methodology to Build:</label>
+                    <select id="targetMethodologySelect" class="form-select">
+                        <option value="waterfall">Waterfall Model (Linear Sequential)</option>
+                        <option value="prototype">Prototype Model (Build & Refine Loops)</option>
+                        <option value="incremental">Incremental Model (Multi-Build Modules)</option>
+                        <option value="iterative">Iterative Model (Cycle Refinements)</option>
+                        <option value="spiral">Spiral Model (Risk-Driven Loops)</option>
+                    </select>
+                </div>
+                <div class="builder-actions">
+                    <button class="btn btn-primary" id="evalWorkflowBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Evaluate Workflow</span>
+                    </button>
+                    <button class="btn btn-ghost" id="clearWorkflowBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <span>Clear Board</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="builder-workspace">
+                <div class="palette-panel">
+                    <h4 class="panel-title">📦 Process & Loop Blocks</h4>
+                    <p class="panel-hint">Drag blocks onto the Workflow Board:</p>
+                    <div class="block-palette" id="blockPalette">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <div class="board-panel">
+                    <div class="board-header">
+                        <h4 class="panel-title">📋 Workflow Canvas Board</h4>
+                        <span class="board-count-badge" id="boardCount">0 Blocks</span>
+                    </div>
+                    <div class="workflow-board" id="workflowBoard">
+                        <div class="board-placeholder" id="boardPlaceholder">
+                            <span class="placeholder-icon">📥</span>
+                            <p>Drag blocks from the palette and drop them here in sequence!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="builder-feedback-card" id="builderFeedbackCard" style="display: none;">
+                <div class="feedback-header">
+                    <div class="feedback-badge" id="feedbackBadge">Analysis</div>
+                    <h3 class="feedback-title" id="feedbackTitle">Workflow Analysis</h3>
+                </div>
+                <p class="feedback-desc" id="feedbackDesc"></p>
+                <div class="feedback-details" id="feedbackDetails"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Real-World Case Studies (Question 3) -->
+    <section class="section" id="casestudies">
+        <div class="section-header">
+            <span class="section-badge">💼 Real-World Scenarios</span>
+            <h2 class="section-title">Case Study <span class="gradient-text">Evaluator</span></h2>
+            <p class="section-subtitle">Read each project scenario, recommend the correct software development methodology, and evaluate the engineering justifications</p>
+        </div>
+
+        <div class="scenarios-container">
+            <div class="scenario-selector-tabs" id="scenarioTabs">
+                <button class="scenario-tab active" data-scenario="0">
+                    <span class="sc-num">Scenario I</span>
+                    <span class="sc-title">News Portal</span>
+                </button>
+                <button class="scenario-tab" data-scenario="1">
+                    <span class="sc-num">Scenario II</span>
+                    <span class="sc-title">E-Learning System</span>
+                </button>
+                <button class="scenario-tab" data-scenario="2">
+                    <span class="sc-num">Scenario III</span>
+                    <span class="sc-title">Bank Regulation</span>
+                </button>
+                <button class="scenario-tab" data-scenario="3">
+                    <span class="sc-num">Scenario IV</span>
+                    <span class="sc-title">CAAN Air Traffic</span>
+                </button>
+            </div>
+
+            <div class="scenario-card" id="scenarioCard">
+                <!-- Content injected dynamically by JS -->
+            </div>
+        </div>
     </section>
 
     <section class="section section-dark" id="quiz">
