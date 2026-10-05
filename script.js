@@ -1282,8 +1282,22 @@ function renderQuizQuestion() {
 
 function showQuizResults() {
     let correct = 0;
+    const wrongQuestions = [];
+
     QUIZ_QUESTIONS.forEach((q, i) => {
         if (quizState.answers[i] === q.correct) correct++;
+        else {
+            const letters = ['A', 'B', 'C', 'D'];
+            const selectedAnswer = quizState.answers[i] >= 0 ? q.options[quizState.answers[i]] : 'No answer selected';
+            const correctAnswer = q.options[q.correct];
+            wrongQuestions.push({
+                number: i + 1,
+                question: q.question,
+                selectedAnswer,
+                correctAnswer,
+                correctLetter: letters[q.correct]
+            });
+        }
     });
 
     document.getElementById('quizContainer').style.display = 'none';
@@ -1301,6 +1315,20 @@ function showQuizResults() {
     document.getElementById('resultsTitle').textContent = title;
     document.getElementById('resultsScore').textContent = `${correct}/${QUIZ_QUESTIONS.length}`;
     document.getElementById('resultsText').textContent = text;
+
+    const list = document.getElementById('wrongQuestionsList');
+    if (wrongQuestions.length === 0) {
+        list.innerHTML = '<div class="wrong-question-item"><strong>Excellent!</strong><span>You got every question correct. No missed questions to review.</span></div>';
+    } else {
+        list.innerHTML = wrongQuestions.map(item => `
+            <div class="wrong-question-item">
+                <strong>Question ${item.number}</strong>
+                <span><b>Question:</b> ${item.question}</span>
+                <span><b>Your answer:</b> ${item.selectedAnswer}</span>
+                <span><b>Correct answer:</b> ${item.correctLetter}. ${item.correctAnswer}</span>
+            </div>
+        `).join('');
+    }
 
     if (pct >= 0.8) launchConfetti();
 }
